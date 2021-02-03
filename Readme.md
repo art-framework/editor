@@ -4,19 +4,53 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![art-framework-badge](https://raw.githubusercontent.com/gist/Silthus/a88fd35b722da343658d54c474c0e5c1/raw/586ba19363678ffc6880de679490f8abb6db3f19/badge.svg)](https://art-framework.io)
 
-# art-module template
+# ART-Editor API
 
-Use this template to quickstart your art-module development.
+This module extends the [art-framework](https://art-framework.io) with an editor API that can be used to implemented web or ingame editors.
 
-Take a look at the [art-framework documentation](https://art-framework.io/#/developer/modules) for more details.
+```java
+import com.sun.source.tree.Scope;
 
-## Template Setup
+public class MyEditor implements FlowEditor<Player> {
 
-* Create a new Github project using this template.
-* Clone the new repository and open it in IntelliJ.
-* Update the `gradle.properties` file and change the following variables:
-    * `group`: your-maven-group-id (e.g.: io.github.silthus)
-* Update the `root.projectName` inside `settings.gradle`. This will be your artifactId.
-* Delete the `CHANGELOG.md` file. It will be created on your first release. 
-* Rename the java package and module to match your project.
-* Code away :) - and once you are ready, push your commit (in [conventional commit style](https://www.conventionalcommits.org/)) to master.
+  private final Scope scope;
+
+  public MyEditor(Scope scope) {
+    this.scope = scope;
+  }
+
+  @Override
+  public EditorSession<List<String>> edit(List<String> input) {
+
+    // gather all required data then create the session
+    return new DefaultSession(input);
+  }
+
+  @Override
+  public void open(@NonNull Player player, @NonNull EditorSession<List<String>> session) {
+
+    // open the editor session for the given player
+  }
+}
+
+@ArtModule(
+        value = "my-editor",
+        description = {
+                "My cool ART web editor.",
+        },
+        version = "@VERSION@",
+        prefix = "my-editor"
+)
+public class MyEditorModule {
+
+  private MyEditor editor;
+
+  @OnBootstrap
+  public void onBootstrap(BootstrapScope scope) {
+
+    this.editor = new MyEditor(scope);
+
+    scope.addSingletonProvider(MyEditor.class, editor);
+  }
+}
+```

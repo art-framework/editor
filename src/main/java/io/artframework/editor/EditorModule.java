@@ -21,13 +21,16 @@ import io.artframework.annotations.OnReload;
 public class EditorModule {
 
     private DummyEditor editor;
+    private WebEditor webEditor;
 
     @OnBootstrap
     public void onBootstrap(BootstrapScope scope) {
 
         this.editor = new DummyEditor(scope);
+        this.webEditor = new WebEditor(scope);
 
         scope.addSingletonProvider(Editor.class, editor);
+        scope.addSingletonProvider(WebEditor.class, webEditor);
     }
     
     @OnLoad

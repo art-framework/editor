@@ -16,9 +16,9 @@ public class WebEditor implements FlowEditor<Consumer<URL>> {
     private final Scope scope;
 
     @Override
-    public EditorSession<List<String>> edit(List<String> input) {
+    public EditorSession<Consumer<URL>, List<String>> edit(List<String> input) {
 
-        return new DefaultSession(input);
+        return new DefaultSession<>(this, input);
     }
 
     /**
@@ -29,7 +29,7 @@ public class WebEditor implements FlowEditor<Consumer<URL>> {
      * @param session the session that should open in the editor. must not be null.
      */
     @Override
-    public void open(@NonNull Consumer<URL> linkCallback, @NonNull EditorSession<List<String>> session) {
+    public void open(@NonNull Consumer<URL> linkCallback, @NonNull EditorSession<Consumer<URL>, List<String>> session) {
 
         // TODO: implement
     }

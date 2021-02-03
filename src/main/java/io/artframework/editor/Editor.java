@@ -31,7 +31,7 @@ public interface Editor<TTarget, TType> extends Provider {
      * @param input the input of the editing session. can be null.
      * @return the new edit session
      */
-    EditorSession<TType> edit(TType input);
+    EditorSession<TTarget, TType> edit(TType input);
 
     /**
      * Opens the given editor session for the given target.
@@ -40,5 +40,5 @@ public interface Editor<TTarget, TType> extends Provider {
      * @param target the target to open the editor for. must not be null.
      * @param session the session that should open in the editor. must not be null.
      */
-    void open(@NonNull TTarget target, @NonNull EditorSession<TType> session);
+    void open(@NonNull TTarget target, @NonNull EditorSession<TTarget, TType> session);
 }

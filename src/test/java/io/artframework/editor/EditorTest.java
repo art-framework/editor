@@ -1,5 +1,6 @@
 package io.artframework.editor;
 
+import io.artframework.MessageSender;
 import io.artframework.Scope;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +32,7 @@ class EditorTest {
     void shouldRememberEditHistory() {
 
 
-        EditorSession<List<String>> session = editor.edit(Arrays.asList(
+        EditorSession<MessageSender, List<String>> session = editor.edit(Arrays.asList(
                 "foo",
                 "bar"
         )).set(Arrays.asList("bar", "foo"));
@@ -48,15 +49,15 @@ class EditorTest {
     @DisplayName("should fire change event")
     void shouldFireChangeEvent() {
 
-        Consumer<EditorSession<List<String>>> callback = spy(new Consumer<>() {
+        Consumer<EditorSession<MessageSender, List<String>>> callback = spy(new Consumer<>() {
             @Override
-            public void accept(EditorSession<List<String>> session) {
+            public void accept(EditorSession<MessageSender, List<String>> session) {
 
                 assertThat(session.output()).isEqualTo(Arrays.asList("bar"));
             }
         });
 
-        EditorSession<List<String>> editorSession = editor.edit(Arrays.asList("foo"))
+        EditorSession<MessageSender, List<String>> editorSession = editor.edit(Arrays.asList("foo"))
                 .onChange(callback);
 
         editorSession.set(Arrays.asList("bar"));

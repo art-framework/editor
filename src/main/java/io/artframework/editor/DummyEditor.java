@@ -15,13 +15,13 @@ public class DummyEditor implements FlowEditor<MessageSender> {
     private final Scope scope;
 
     @Override
-    public EditorSession<List<String>> edit(List<String> input) {
+    public EditorSession<MessageSender, List<String>> edit(List<String> input) {
 
-        return new DefaultSession(input);
+        return new DefaultSession<>(this, input);
     }
 
     @Override
-    public void open(@NonNull MessageSender messageSender, @NonNull EditorSession<List<String>> session) {
+    public void open(@NonNull MessageSender messageSender, @NonNull EditorSession<MessageSender, List<String>> session) {
 
     }
 }

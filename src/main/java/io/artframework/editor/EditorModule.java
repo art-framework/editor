@@ -1,6 +1,8 @@
 package io.artframework.editor;
 
+import io.artframework.ArtContext;
 import io.artframework.BootstrapScope;
+import io.artframework.ParseException;
 import io.artframework.Scope;
 import io.artframework.annotations.ArtModule;
 import io.artframework.annotations.OnBootstrap;
@@ -8,6 +10,9 @@ import io.artframework.annotations.OnDisable;
 import io.artframework.annotations.OnEnable;
 import io.artframework.annotations.OnLoad;
 import io.artframework.annotations.OnReload;
+
+import java.util.Arrays;
+import java.util.List;
 
 @ArtModule(
     value = "art-editor",
@@ -22,6 +27,7 @@ public class EditorModule {
 
     private DummyEditor editor;
     private WebEditor webEditor;
+    private ArtContext context;
 
     @OnBootstrap
     public void onBootstrap(BootstrapScope scope) {
@@ -41,6 +47,22 @@ public class EditorModule {
     @OnEnable
     public void onEnable(Scope scope) {
 
+        try {
+            List<String> cfg = Arrays.asList(
+                    "foob",
+                    "bar"
+            );
+            context = scope.load(cfg);
+            webEditor.edit(cfg).onChange(session -> {
+                try {
+                    context = scope.load(session.output());
+                } catch (ParseException e) {
+                    // TODO: catch exception
+                }
+            }).open(url -> {});
+        } catch (ParseException e) {
+            // TODO: catch exception
+        }
     }
 
     @OnReload

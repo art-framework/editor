@@ -3,27 +3,22 @@ package io.artframework.editor;
 import java.util.List;
 import java.util.UUID;
 
-public final class DefaultSession extends AbstractEditorSession<List<String>> {
+public final class DefaultSession<TTarget> extends AbstractEditorSession<TTarget, List<String>> {
 
-    public DefaultSession(List<String> input) {
+    public DefaultSession(Editor<TTarget, List<String>> editor, List<String> input) {
 
-        super(UUID.randomUUID().toString(), input);
+        super(editor, UUID.randomUUID().toString(), List.copyOf(input));
     }
 
-    DefaultSession(String identifier, List<String> input) {
+    private DefaultSession(DefaultSession<TTarget> session, List<String> output) {
 
-        super(identifier, List.copyOf(input));
-    }
-
-    private DefaultSession(String identifier, List<String> input, List<String> output) {
-
-        super(identifier, List.copyOf(input), List.copyOf(output));
+        super(session, List.copyOf(output));
     }
 
     @Override
-    protected AbstractEditorSession<List<String>> create(EditorSession<List<String>> session, List<String> newValue) {
+    protected AbstractEditorSession<TTarget, List<String>> create(EditorSession<TTarget, List<String>> session, List<String> newValue) {
 
-        return new DefaultSession(identifier(),session.input(), newValue);
+        return new DefaultSession<>(this, newValue);
     }
 
 }

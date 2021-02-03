@@ -15,9 +15,15 @@ import java.util.function.Consumer;
  * Editor.edit(config.get("foobar"))
  *      .onChange(session -> config.set("foobar", session.output()));
  * }</pre>
+ * @param <TTarget> the target type of the editor
  * @param <TValue> the input type of the editor and editor session
  */
-public interface EditorSession<TValue> {
+public interface EditorSession<TTarget, TValue> {
+
+    /**
+     * @return the editor that created this edit session
+     */
+    Editor<TTarget, TValue> editor();
 
     /**
      * Each editor session is identified by a unique string.
@@ -48,7 +54,7 @@ public interface EditorSession<TValue> {
      * @param value the new value of this session
      * @return an new editor session with the new output value
      */
-    EditorSession<TValue> set(TValue value);
+    EditorSession<TTarget, TValue> set(TValue value);
 
     /**
      * The change history holds a list of all changes that
@@ -71,7 +77,17 @@ public interface EditorSession<TValue> {
      * session but only if the value given to {@link #set(Object)} actually changed.
      *
      * @param callback the callback that consumes the change event
-     * @return this editor session
+     * @return this editor that created this session
      */
-    EditorSession<TValue> onChange(Consumer<EditorSession<TValue>> callback);
+    EditorSession<TTarget, TValue> onChange(Consumer<EditorSession<TTarget, TValue>> callback);
+
+    /**
+     * Opens this session in the editor for the given target.
+     *
+     * @param target the target this session should be opened for
+     */
+    default void open(TTarget target) {
+
+        editor().open(target, this);
+    }
 }

@@ -35,7 +35,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.art-framework.art-framework:api:4.4.0'
+    implementation 'io.art-framework.art-framework:api:5.0.0'
 
     //Test dependencies
     testImplementation 'org.junit.jupiter:junit-jupiter:5.+'
